@@ -1,0 +1,16 @@
+{
+  "name": "com.sheedon.hex",
+  "version": "0.1.0",
+  "displayName": "Sheedon Hex",
+  "description": "Unity-independent hex coordinates, topology, geometry, finite map structures, and graph algorithms.",
+  "unity": "2021.3",
+  "keywords": [
+    "hex",
+    "hexagon",
+    "grid",
+    "pathfinding"
+  ],
+  "author": {
+    "name": "Sheedon"
+  }
+}

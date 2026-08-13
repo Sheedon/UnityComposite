@@ -1,0 +1,5 @@
+# License
+
+Copyright (c) 2026 Sheedon. All rights reserved.
+
+No permission is granted to copy, modify, distribute, sublicense, or sell this software without the copyright holder's prior written permission.
