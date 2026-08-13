@@ -29,4 +29,4 @@ The package intentionally has no dependency on `UnityEngine`. Conversion from `H
 - Direction order is frozen as `NE/E/SE/SW/W/NW`.
 - Map storage and search algorithms are planned for later `0.x` milestones.
 
-See [Documentation/Architecture.md](Documentation~/Architecture.md) for the frozen boundaries.
+See [Documentation/Architecture.md](Documentation/Architecture.md) for the frozen boundaries.
