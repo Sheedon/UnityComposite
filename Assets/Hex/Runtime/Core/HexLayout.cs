@@ -3,7 +3,7 @@ using System;
 namespace Sheedon.Hex
 {
     /**
-     * 负责在六边形轴向坐标与平顶布局的二维点坐标之间进行转换，并提供单元格角点计算。
+     * 负责在六边形轴向坐标与尖顶布局的二维点坐标之间进行转换，并提供单元格角点计算。
      */
     public sealed class HexLayout
     {
@@ -58,8 +58,8 @@ namespace Sheedon.Hex
          */
         public HexPoint HexToPoint(HexCoord coord)
         {
-            var x = HexSize * (1.5d * coord.Q);
-            var y = HexSize * (SquareRootOfThree * (coord.R + (coord.Q / 2d)));
+            var x = HexSize * (SquareRootOfThree * (coord.Q + (coord.R / 2d)));
+            var y = HexSize * (1.5d * coord.R);
             return new HexPoint(x + Origin.X, y + Origin.Y);
         }
 
@@ -72,8 +72,8 @@ namespace Sheedon.Hex
         {
             var x = (point.X - Origin.X) / HexSize;
             var y = (point.Y - Origin.Y) / HexSize;
-            var q = (2d / 3d) * x;
-            var r = ((-1d / 3d) * x) + ((SquareRootOfThree / 3d) * y);
+            var q = ((SquareRootOfThree / 3d) * x) - ((1d / 3d) * y);
+            var r = (2d / 3d) * y;
             return HexGeometry.Round(q, r);
         }
 
@@ -92,7 +92,7 @@ namespace Sheedon.Hex
             }
 
             var center = HexToPoint(coord);
-            var angle = Math.PI / 3d * cornerIndex;
+            var angle = (Math.PI / 3d * cornerIndex) + (Math.PI / 6d);
             return new HexPoint(
                 center.X + (HexSize * Math.Cos(angle)),
                 center.Y + (HexSize * Math.Sin(angle)));

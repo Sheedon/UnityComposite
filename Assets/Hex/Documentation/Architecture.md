@@ -3,7 +3,7 @@
 ## Frozen version-one decisions
 
 - The library provides mechanisms; consuming game modules provide terrain, movement, and gameplay rules.
-- Only flat-top hexes are supported.
+- Only pointy-top hexes are supported.
 - Axial `Q/R` is canonical and cube `S` is calculated.
 - Direction values are frozen as `NE = 0`, `E = 1`, `SE = 2`, `SW = 3`, `W = 4`, and `NW = 5`.
 - Runtime code is one `Sheedon.Hex` assembly with logical `Core`, `Map`, and `Algorithms` areas.

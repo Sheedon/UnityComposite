@@ -20,7 +20,7 @@ namespace Sheedon.Hex
             new HexRegion(HexTopology.GetRange(center, radius));
 
         /**
-         * 使用 Flat Top odd-q 偏移行列创建矩形区域，origin 表示左上角格子。
+         * 使用尖顶 odd-r 偏移行列创建矩形区域，origin 表示左上角格子。
          * @param origin 矩形左上角的六边形坐标。
          * @param width 矩形列数，必须大于 0。
          * @param height 矩形行数，必须大于 0。
@@ -34,7 +34,7 @@ namespace Sheedon.Hex
         }
 
         /**
-         * 使用 Flat Top odd-q 偏移行列创建等宽等高的正方形区域。
+         * 使用尖顶 odd-r 偏移行列创建等宽等高的正方形区域。
          * @param origin 正方形左上角的六边形坐标。
          * @param size 正方形行数与列数，必须大于 0。
          * @return 创建完成的区域。
@@ -46,7 +46,7 @@ namespace Sheedon.Hex
         }
 
         /**
-         * 按 Flat Top 布局中格子中心的真实二维距离创建圆形区域。
+         * 按尖顶布局中格子中心的真实二维距离创建圆形区域。
          * @param center 圆心所在的六边形坐标。
          * @param radius 二维布局单位中的圆半径，必须为有限非负数。
          * @param layout 用于计算格子中心位置的布局。
@@ -115,16 +115,16 @@ namespace Sheedon.Hex
 
         private static IEnumerable<HexCoord> EnumerateRectangle(HexCoord origin, int width, int height)
         {
-            var originColumn = origin.Q;
-            var originRow = ToOddQRow(origin);
+            var originColumn = ToOddRColumn(origin);
+            var originRow = origin.R;
 
-            for (long columnOffset = 0; columnOffset < width; columnOffset++)
+            for (long rowOffset = 0; rowOffset < height; rowOffset++)
             {
-                var column = checked((int)(originColumn + columnOffset));
-                for (long rowOffset = 0; rowOffset < height; rowOffset++)
+                var row = checked((int)(originRow + rowOffset));
+                for (long columnOffset = 0; columnOffset < width; columnOffset++)
                 {
-                    var row = checked((int)(originRow + rowOffset));
-                    yield return FromOddQ(column, row);
+                    var column = checked((int)(originColumn + columnOffset));
+                    yield return FromOddR(column, row);
                 }
             }
         }
@@ -168,11 +168,11 @@ namespace Sheedon.Hex
             }
         }
 
-        private static int ToOddQRow(HexCoord coord) =>
-            checked(coord.R + ((coord.Q - (coord.Q & 1)) / 2));
+        private static int ToOddRColumn(HexCoord coord) =>
+            checked(coord.Q + ((coord.R - (coord.R & 1)) / 2));
 
-        private static HexCoord FromOddQ(int column, int row) =>
-            new HexCoord(column, checked(row - ((column - (column & 1)) / 2)));
+        private static HexCoord FromOddR(int column, int row) =>
+            new HexCoord(checked(column - ((row - (row & 1)) / 2)), row);
 
         private static void ValidatePositive(int value, string parameterName)
         {

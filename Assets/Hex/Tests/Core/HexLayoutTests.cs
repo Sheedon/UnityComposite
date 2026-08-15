@@ -9,17 +9,17 @@ namespace Sheedon.Hex.Tests.Core
     public sealed class HexLayoutTests
     {
 /**
- * 确认使用平顶布局公式时，坐标转换会考虑原点位置和尺寸参数。
+ * 确认使用尖顶布局公式时，坐标转换会考虑原点位置和尺寸参数。
  */
         [Test]
-        public void HexToPoint_UsesFlatTopFormulaAndOrigin()
+        public void HexToPoint_UsesPointyTopFormulaAndOrigin()
         {
             var layout = new HexLayout(2d, new HexPoint(10d, -5d));
 
             var point = layout.HexToPoint(new HexCoord(1, 0));
 
-            Assert.That(point.X, Is.EqualTo(13d).Within(1e-10));
-            Assert.That(point.Y, Is.EqualTo(-5d + Math.Sqrt(3d)).Within(1e-10));
+            Assert.That(point.X, Is.EqualTo(10d + (2d * Math.Sqrt(3d))).Within(1e-10));
+            Assert.That(point.Y, Is.EqualTo(-5d).Within(1e-10));
         }
 
 /**
@@ -58,6 +58,20 @@ namespace Sheedon.Hex.Tests.Core
 
                 Assert.That(distance, Is.EqualTo(4d).Within(1e-10));
             }
+        }
+
+/**
+ * 确认尖顶布局的首个角点相对水平方向旋转三十度，不会退化为平顶布局。
+ */
+        [Test]
+        public void GetCorner_UsesPointyTopAngleOffset()
+        {
+            var layout = new HexLayout(2d);
+
+            var corner = layout.GetCorner(HexCoord.Zero, 0);
+
+            Assert.That(corner.X, Is.EqualTo(Math.Sqrt(3d)).Within(1e-10));
+            Assert.That(corner.Y, Is.EqualTo(1d).Within(1e-10));
         }
 
 /**

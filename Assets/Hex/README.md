@@ -1,6 +1,6 @@
 # Sheedon Hex
 
-`Sheedon.Hex` is a Unity-independent foundation for flat-top hex grids. Version `0.2.0` contains Core geometry together with finite regions, reusable map shapes, and generic coordinate data layers.
+`Sheedon.Hex` is a Unity-independent foundation for pointy-top hex grids. Version `0.2.0` contains Core geometry together with finite regions, reusable map shapes, and generic coordinate data layers.
 
 ## Install locally
 
@@ -28,7 +28,7 @@ The package intentionally has no dependency on `UnityEngine`. Conversion from `H
 
 ## Current scope
 
-- Flat-top orientation only.
+- Pointy-top orientation only.
 - Axial `Q/R` coordinates with calculated cube `S`.
 - Direction order is frozen as `NE/E/SE/SW/W/NW`.
 - Finite maps are represented by `HexRegion` plus one or more `HexLayer<T>` instances.
