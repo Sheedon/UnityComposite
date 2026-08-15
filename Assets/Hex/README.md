@@ -1,6 +1,6 @@
 # Sheedon Hex
 
-`Sheedon.Hex` is a Unity-independent foundation for pointy-top hex grids. Version `0.2.0` contains Core geometry together with finite regions, reusable map shapes, and generic coordinate data layers.
+`Sheedon.Hex` is a Unity-independent foundation for pointy-top hex grids. Version `0.3.0` contains Core geometry, finite map structures, graph contracts, and reusable search algorithms.
 
 ## Install locally
 
@@ -22,9 +22,13 @@ var coord = layout.PointToHex(worldPlanePoint);
 var region = HexShapes.CreateHexagon(origin, 3);
 var terrain = new HexLayer<int>(region);
 terrain.Set(origin, 1);
+
+var graph = new RegionHexGraph(region);
 ```
 
 The package intentionally has no dependency on `UnityEngine`. Conversion from `HexPoint` to `Vector2` or `Vector3` belongs in the consuming Unity integration layer.
+
+The consuming game implements `IHexTraversalRule` for each movement mode, then passes that rule together with the graph to `BreadthFirstSearch.FindPath`, `Dijkstra.FindPath`, `AStar.FindPath`, `CostRange.Find`, or `FloodFill.FindConnected`.
 
 ## Current scope
 
@@ -33,4 +37,7 @@ The package intentionally has no dependency on `UnityEngine`. Conversion from `H
 - Direction order is frozen as `NE/E/SE/SW/W/NW`.
 - Finite maps are represented by `HexRegion` plus one or more `HexLayer<T>` instances.
 - Shapes are region construction methods and do not create map subclasses.
-- Graph contracts and search algorithms are planned for the next `0.x` milestone.
+- `IHexGraph` describes valid nodes and immediate adjacency; `RegionHexGraph` adapts a live region.
+- `IHexTraversalRule` keeps game-specific passability and positive integer Cost outside the package.
+- BFS, Dijkstra, A*, CostRange, and FloodFill operate through those contracts.
+- A* uses Hex Distance by default and accepts an optional non-negative admissible estimate callback.

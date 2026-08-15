@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2026-08-15
+
+- Added `IHexGraph`, `IHexTraversalRule`, and the live `RegionHexGraph` adapter.
+- Added BFS, Dijkstra, and A* pathfinding with explicit path statuses and positive integer Cost validation.
+- Added CostRange minimum-cost results and traversal-aware FloodFill.
+- Added Algorithms EditMode coverage for obstacles, weighted routes, invalid endpoints, overflow, ranges, and disconnected regions.
+
 ## [0.2.0] - 2026-08-14
 
 - Added mutable finite regions with duplicate-safe membership.

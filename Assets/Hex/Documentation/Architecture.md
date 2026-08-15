@@ -16,6 +16,10 @@
 
 `Map` and `Algorithms` may depend on `Core`. Algorithms must operate through graph and traversal contracts rather than concrete map types.
 
+`IHexGraph` exposes node membership and immediate Hex Distance-one neighbors. `IHexTraversalRule` independently decides whether a directed edge can be traversed and returns its positive integer Cost. `RegionHexGraph` is the narrow adapter from a live `HexRegion` to the graph contract.
+
+Path searches return `HexPathResult` with `Success`, `NoPath`, `InvalidStart`, or `InvalidGoal`. BFS minimizes edge count; Dijkstra and A* minimize injected Cost. A* defaults to Hex Distance and accepts a non-negative admissible estimate callback. CostRange records the minimum Cost of every node reachable within a budget, while FloodFill returns the complete traversal-aware connected component.
+
 ## Explicitly outside the package
 
 Terrain, elevation, resources, ownership, rendering, meshes, shaders, GameObjects, picking, selection, chunk streaming, map saves, asynchronous scheduling, and game-specific movement rules are not responsibilities of this package.
