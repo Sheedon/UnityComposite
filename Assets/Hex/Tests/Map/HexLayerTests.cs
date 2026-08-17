@@ -32,6 +32,40 @@ namespace Sheedon.Hex.Tests.Map
         }
 
         [Test]
+        public void Remove_ClearsAssignedValueWithoutChangingRegion()
+        {
+            var coord = HexCoord.Zero;
+            var region = new HexRegion(new[] { coord });
+            var layer = new HexLayer<int>(region);
+            layer.Set(coord, 7);
+
+            Assert.That(layer.Remove(coord), Is.True);
+            Assert.That(region.Contains(coord), Is.True);
+            Assert.That(layer.Contains(coord), Is.False);
+            Assert.That(layer.TryGet(coord, out _), Is.False);
+            Assert.Throws<KeyNotFoundException>(() => layer.Get(coord));
+            Assert.That(layer.Remove(coord), Is.False);
+        }
+
+        [Test]
+        public void Remove_AfterRegionRemoval_ClearsStaleStoredValue()
+        {
+            var coord = new HexCoord(2, -1);
+            var region = new HexRegion(new[] { coord });
+            var layer = new HexLayer<int>(region);
+            layer.Set(coord, 42);
+
+            region.Remove(coord);
+
+            Assert.That(layer.Remove(coord), Is.True);
+            Assert.That(layer.Remove(coord), Is.False);
+
+            region.Add(coord);
+            Assert.That(layer.Contains(coord), Is.False);
+            Assert.That(layer.TryGet(coord, out _), Is.False);
+        }
+
+        [Test]
         public void InvalidOrUnassignedCoordinates_HaveDistinctBehavior()
         {
             var inside = HexCoord.Zero;

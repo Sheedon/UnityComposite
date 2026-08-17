@@ -55,6 +55,17 @@ namespace Sheedon.Hex
         }
 
         /**
+         * 清除指定坐标保存的数据，但不改变 Region 成员关系。
+         * 即使坐标已从 Region 移除，也会清理其失效代次中残留的数据。
+         * @param coord 要清除数据的坐标。
+         * @return 如果底层此前保存过该坐标的数据则返回 true。
+         */
+        public bool Remove(HexCoord coord)
+        {
+            return _values.Remove(coord);
+        }
+
+        /**
          * 尝试获取指定坐标当前保存的数据。
          * @param coord 要查询的坐标。
          * @param value 查询成功时返回数据，否则返回 T 的默认值。
