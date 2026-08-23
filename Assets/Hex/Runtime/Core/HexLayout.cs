@@ -97,5 +97,25 @@ namespace Sheedon.Hex
                 center.X + (HexSize * Math.Cos(angle)),
                 center.Y + (HexSize * Math.Sin(angle)));
         }
+
+        /**
+         * 获取指定方向所对应逻辑边的两个角点。
+         * 角点顺序与 GetCorner 一致，方向与 HexTopology 的邻接定义一致。
+         * @param coord 六边形坐标。
+         * @param direction 要获取的逻辑边方向。
+         * @param start 逻辑边的起始角点。
+         * @param end 逻辑边的结束角点。
+         */
+        public void GetEdgeCorners(
+            HexCoord coord,
+            HexDirection direction,
+            out HexPoint start,
+            out HexPoint end)
+        {
+            // Pointy Top 角点 0 从 +30 度开始；NE 对应角点 4→5。
+            var startCorner = (direction.ToIndex() + 4) % 6;
+            start = GetCorner(coord, startCorner);
+            end = GetCorner(coord, (startCorner + 1) % 6);
+        }
     }
 }

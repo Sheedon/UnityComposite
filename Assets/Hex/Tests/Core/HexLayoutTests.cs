@@ -75,6 +75,71 @@ namespace Sheedon.Hex.Tests.Core
         }
 
 /**
+ * 验证六个方向的边中心都指向对应邻居，避免表现层维护第二套方向角点表。
+ */
+        [Test]
+        public void GetEdgeCorners_MatchesPointyTopNeighborDirections()
+        {
+            var layout = new HexLayout(2d, new HexPoint(3d, -4d));
+            var coord = new HexCoord(-2, 3);
+            var center = layout.HexToPoint(coord);
+
+            foreach (HexDirection direction in Enum.GetValues(typeof(HexDirection)))
+            {
+                HexPoint start;
+                HexPoint end;
+                layout.GetEdgeCorners(coord, direction, out start, out end);
+                var neighborCenter = layout.HexToPoint(
+                    HexTopology.GetNeighbor(coord, direction));
+                var edgeMidpoint = new HexPoint(
+                    (start.X + end.X) * 0.5d,
+                    (start.Y + end.Y) * 0.5d);
+
+                var edgeDirectionX = edgeMidpoint.X - center.X;
+                var edgeDirectionY = edgeMidpoint.Y - center.Y;
+                var neighborDirectionX = neighborCenter.X - center.X;
+                var neighborDirectionY = neighborCenter.Y - center.Y;
+                var cross = (edgeDirectionX * neighborDirectionY) -
+                            (edgeDirectionY * neighborDirectionX);
+                var dot = (edgeDirectionX * neighborDirectionX) +
+                          (edgeDirectionY * neighborDirectionY);
+
+                Assert.That(cross, Is.EqualTo(0d).Within(1e-10), direction.ToString());
+                Assert.That(dot, Is.GreaterThan(0d), direction.ToString());
+            }
+        }
+
+/**
+ * 验证相邻六边形从相反方向取得完全相同的公共边。
+ */
+        [Test]
+        public void GetEdgeCorners_AdjacentHexesShareExactlyTheSameEdge()
+        {
+            var layout = new HexLayout(1.75d);
+            var coord = new HexCoord(-1, 0);
+
+            foreach (HexDirection direction in Enum.GetValues(typeof(HexDirection)))
+            {
+                HexPoint start;
+                HexPoint end;
+                layout.GetEdgeCorners(coord, direction, out start, out end);
+
+                HexPoint neighborStart;
+                HexPoint neighborEnd;
+                layout.GetEdgeCorners(
+                    HexTopology.GetNeighbor(coord, direction),
+                    direction.Opposite(),
+                    out neighborStart,
+                    out neighborEnd);
+
+                Assert.That(start.X, Is.EqualTo(neighborEnd.X).Within(1e-10));
+                Assert.That(start.Y, Is.EqualTo(neighborEnd.Y).Within(1e-10));
+                Assert.That(end.X, Is.EqualTo(neighborStart.X).Within(1e-10));
+                Assert.That(end.Y, Is.EqualTo(neighborStart.Y).Within(1e-10));
+            }
+        }
+
+/**
  * 验证非法布局参数会抛出异常，避免生成无意义的网格配置。
  */
         [Test]
@@ -84,6 +149,16 @@ namespace Sheedon.Hex.Tests.Core
             Assert.Throws<ArgumentOutOfRangeException>(() => new HexLayout(double.NaN));
             Assert.Throws<ArgumentOutOfRangeException>(() => new HexLayout(1d, new HexPoint(double.PositiveInfinity, 0d)));
             Assert.Throws<ArgumentOutOfRangeException>(() => new HexLayout(1d).GetCorner(HexCoord.Zero, 6));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                HexPoint start;
+                HexPoint end;
+                new HexLayout(1d).GetEdgeCorners(
+                    HexCoord.Zero,
+                    (HexDirection)6,
+                    out start,
+                    out end);
+            });
         }
     }
 }
