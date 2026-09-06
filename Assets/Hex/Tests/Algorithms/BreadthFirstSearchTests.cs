@@ -16,16 +16,20 @@ namespace Sheedon.Hex.Tests.Algorithms
         {
             var coordinates = Enumerable.Range(0, 4).Select(q => new HexCoord(q, 0)).ToArray();
             var graph = new RegionHexGraph(new HexRegion(coordinates));
+            var rule = new AlgorithmTestTraversalRule();
 
             var result = BreadthFirstSearch.FindPath(
                 graph,
-                new AlgorithmTestTraversalRule(),
+                rule,
                 coordinates[0],
                 coordinates[3]);
 
             Assert.That(result.Status, Is.EqualTo(HexPathStatus.Success));
             Assert.That(result.Path, Is.EqualTo(coordinates));
             Assert.That(result.TotalCost, Is.EqualTo(3));
+            Assert.That(rule.CanTraverseCallCount, Is.GreaterThan(0));
+            Assert.That(rule.GetCostCallCount, Is.Zero);
+            Assert.That(rule.TryGetCostCallCount, Is.Zero);
         }
 
         /**

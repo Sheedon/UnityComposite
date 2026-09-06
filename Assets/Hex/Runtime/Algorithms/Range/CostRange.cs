@@ -48,12 +48,16 @@ namespace Sheedon.Hex
 
                 foreach (var neighbor in HexSearchUtility.RequireNeighbors(graph, current))
                 {
-                    if (!graph.Contains(neighbor) || !traversalRule.CanTraverse(current, neighbor))
+                    if (!graph.Contains(neighbor) ||
+                        !HexSearchUtility.TryGetPositiveCost(
+                            traversalRule,
+                            current,
+                            neighbor,
+                            out var edgeCost))
                     {
                         continue;
                     }
 
-                    var edgeCost = HexSearchUtility.GetPositiveCost(traversalRule, current, neighbor);
                     var candidateCostValue = (long)currentCost + edgeCost;
                     if (candidateCostValue > maximumCost)
                     {

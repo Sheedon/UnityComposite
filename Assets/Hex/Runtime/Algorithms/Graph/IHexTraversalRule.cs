@@ -20,5 +20,16 @@ namespace Sheedon.Hex
          * @return 通过该有向边所需的正整数代价。
          */
         int GetCost(HexCoord from, HexCoord to);
+
+        /**
+         * 尝试获取从起点移动到目标点所需要的搜索成本。
+         *
+         * 返回 false 表示当前有向边不可通行；返回 true 时，cost 必须为大于 0 的整数。
+         * @param from 当前节点。
+         * @param to 目标相邻节点。
+         * @param cost 边可通行时返回所需的正整数代价；不可通行时该值不会被算法使用。
+         * @return 如果该有向边可通行且能够取得 Cost 则返回 true。
+         */
+        bool TryGetCost(HexCoord from, HexCoord to, out int cost);
     }
 }

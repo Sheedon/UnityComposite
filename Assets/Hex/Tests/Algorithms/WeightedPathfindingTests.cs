@@ -88,6 +88,30 @@ namespace Sheedon.Hex.Tests.Algorithms
         }
 
         /**
+         * 确认加权搜索与 CostRange 只调用组合式 TryGetCost，不再分别查询通行性和 Cost。
+         */
+        [Test]
+        public void WeightedSearches_UseCombinedTryGetCostOnly()
+        {
+            var start = HexCoord.Zero;
+            var middle = new HexCoord(1, 0);
+            var goal = new HexCoord(2, 0);
+            var graph = new RegionHexGraph(new HexRegion(new[] { start, middle, goal }));
+            var rule = new AlgorithmTestTraversalRule();
+
+            var dijkstra = Dijkstra.FindPath(graph, rule, start, goal);
+            var aStar = AStar.FindPath(graph, rule, start, goal);
+            var range = CostRange.Find(graph, rule, start, 2);
+
+            Assert.That(dijkstra.Status, Is.EqualTo(HexPathStatus.Success));
+            Assert.That(aStar.Status, Is.EqualTo(HexPathStatus.Success));
+            Assert.That(range.Contains(goal), Is.True);
+            Assert.That(rule.TryGetCostCallCount, Is.GreaterThan(0));
+            Assert.That(rule.CanTraverseCallCount, Is.Zero);
+            Assert.That(rule.GetCostCallCount, Is.Zero);
+        }
+
+        /**
          * 验证非正边 Cost 与负启发值会在算法边界立即被拒绝。
          */
         [Test]

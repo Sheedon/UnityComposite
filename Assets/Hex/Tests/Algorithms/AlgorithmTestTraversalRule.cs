@@ -18,8 +18,35 @@ namespace Sheedon.Hex.Tests.Algorithms
             _getCost = getCost ?? ((from, to) => 1);
         }
 
-        public bool CanTraverse(HexCoord from, HexCoord to) => _canTraverse(from, to);
+        public int CanTraverseCallCount { get; private set; }
 
-        public int GetCost(HexCoord from, HexCoord to) => _getCost(from, to);
+        public int GetCostCallCount { get; private set; }
+
+        public int TryGetCostCallCount { get; private set; }
+
+        public bool CanTraverse(HexCoord from, HexCoord to)
+        {
+            CanTraverseCallCount++;
+            return _canTraverse(from, to);
+        }
+
+        public int GetCost(HexCoord from, HexCoord to)
+        {
+            GetCostCallCount++;
+            return _getCost(from, to);
+        }
+
+        public bool TryGetCost(HexCoord from, HexCoord to, out int cost)
+        {
+            TryGetCostCallCount++;
+            if (!_canTraverse(from, to))
+            {
+                cost = 0;
+                return false;
+            }
+
+            cost = _getCost(from, to);
+            return true;
+        }
     }
 }

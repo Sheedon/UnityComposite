@@ -32,16 +32,25 @@ namespace Sheedon.Hex
             return neighbors;
         }
 
-        public static int GetPositiveCost(IHexTraversalRule traversalRule, HexCoord from, HexCoord to)
+        public static bool TryGetPositiveCost(
+            IHexTraversalRule traversalRule,
+            HexCoord from,
+            HexCoord to,
+            out int cost)
         {
-            var cost = traversalRule.GetCost(from, to);
+            if (!traversalRule.TryGetCost(from, to, out cost))
+            {
+                cost = 0;
+                return false;
+            }
+
             if (cost <= 0)
             {
                 throw new InvalidOperationException(
                     $"Traversal cost from {from} to {to} must be greater than zero, but was {cost}.");
             }
 
-            return cost;
+            return true;
         }
 
         public static int AddCost(int currentCost, int edgeCost, HexCoord from, HexCoord to)

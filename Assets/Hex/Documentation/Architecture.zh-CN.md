@@ -16,9 +16,9 @@
 
 `Map` 和 `Algorithms` 可以依赖 `Core`。算法必须通过图结构和遍历契约来操作，而不是直接依赖具体的地图类型。
 
-`IHexGraph` 暴露节点成员资格以及 Hex Distance 为 1 的直接邻居。`IHexTraversalRule` 独立判断一条有向边是否允许通过，并返回严格大于 0 的整数 Cost。`RegionHexGraph` 是从实时 `HexRegion` 到图契约的窄适配器。
+`IHexGraph` 暴露节点成员资格以及 Hex Distance 为 1 的直接邻居。`IHexTraversalRule` 独立判断一条有向边是否允许通过，并返回严格大于 0 的整数 Cost。`TryGetCost` 为加权算法组合完成这两个查询；不需要 Cost 的算法仍直接使用 `CanTraverse`。`RegionHexGraph` 是从实时 `HexRegion` 到图契约的窄适配器。
 
-路径搜索统一返回 `HexPathResult`，状态包括 `Success`、`NoPath`、`InvalidStart` 和 `InvalidGoal`。BFS 最小化边数，Dijkstra 与 A* 最小化注入的 Cost；A* 默认使用 Hex Distance，也允许提供非负且可采纳的估算回调。CostRange 保存预算内每个可达节点的最小 Cost，FloodFill 返回遵守通行规则的完整连通分量。
+路径搜索统一返回 `HexPathResult`，状态包括 `Success`、`NoPath`、`InvalidStart` 和 `InvalidGoal`。BFS 最小化边数并使用 `CanTraverse`；Dijkstra 与 A* 最小化注入的 Cost，并使用 `TryGetCost`；A* 默认使用 Hex Distance，也允许提供非负且可采纳的估算回调。CostRange 同样使用 `TryGetCost` 保存预算内每个可达节点的最小 Cost，FloodFill 使用 `CanTraverse` 返回遵守通行规则的完整连通分量。
 
 ## 明确不属于该包的职责
 

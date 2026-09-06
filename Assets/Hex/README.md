@@ -28,7 +28,7 @@ var graph = new RegionHexGraph(region);
 
 The package intentionally has no dependency on `UnityEngine`. Conversion from `HexPoint` to `Vector2` or `Vector3` belongs in the consuming Unity integration layer.
 
-The consuming game implements `IHexTraversalRule` for each movement mode, then passes that rule together with the graph to `BreadthFirstSearch.FindPath`, `Dijkstra.FindPath`, `AStar.FindPath`, `CostRange.Find`, or `FloodFill.FindConnected`.
+The consuming game implements `IHexTraversalRule` for each movement mode, then passes that rule together with the graph to `BreadthFirstSearch.FindPath`, `Dijkstra.FindPath`, `AStar.FindPath`, `CostRange.Find`, or `FloodFill.FindConnected`. Weighted searches use `TryGetCost` to obtain passability and positive Cost in one query; BFS and FloodFill use `CanTraverse` because they do not consume Cost.
 
 ## Current scope
 
@@ -38,6 +38,6 @@ The consuming game implements `IHexTraversalRule` for each movement mode, then p
 - Finite maps are represented by `HexRegion` plus one or more `HexLayer<T>` instances.
 - Shapes are region construction methods and do not create map subclasses.
 - `IHexGraph` describes valid nodes and immediate adjacency; `RegionHexGraph` adapts a live region.
-- `IHexTraversalRule` keeps game-specific passability and positive integer Cost outside the package.
+- `IHexTraversalRule` keeps game-specific passability and positive integer Cost outside the package, with `TryGetCost` as the combined query for weighted searches.
 - BFS, Dijkstra, A*, CostRange, and FloodFill operate through those contracts.
 - A* uses Hex Distance by default and accepts an optional non-negative admissible estimate callback.

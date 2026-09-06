@@ -16,9 +16,9 @@
 
 `Map` and `Algorithms` may depend on `Core`. Algorithms must operate through graph and traversal contracts rather than concrete map types.
 
-`IHexGraph` exposes node membership and immediate Hex Distance-one neighbors. `IHexTraversalRule` independently decides whether a directed edge can be traversed and returns its positive integer Cost. `RegionHexGraph` is the narrow adapter from a live `HexRegion` to the graph contract.
+`IHexGraph` exposes node membership and immediate Hex Distance-one neighbors. `IHexTraversalRule` independently decides whether a directed edge can be traversed and returns its positive integer Cost. `TryGetCost` combines those two queries for weighted algorithms, while `CanTraverse` remains the direct query for algorithms that do not consume Cost. `RegionHexGraph` is the narrow adapter from a live `HexRegion` to the graph contract.
 
-Path searches return `HexPathResult` with `Success`, `NoPath`, `InvalidStart`, or `InvalidGoal`. BFS minimizes edge count; Dijkstra and A* minimize injected Cost. A* defaults to Hex Distance and accepts a non-negative admissible estimate callback. CostRange records the minimum Cost of every node reachable within a budget, while FloodFill returns the complete traversal-aware connected component.
+Path searches return `HexPathResult` with `Success`, `NoPath`, `InvalidStart`, or `InvalidGoal`. BFS minimizes edge count and uses `CanTraverse`; Dijkstra and A* minimize injected Cost and use `TryGetCost`. A* defaults to Hex Distance and accepts a non-negative admissible estimate callback. CostRange also uses `TryGetCost` to record the minimum Cost of every node reachable within a budget, while FloodFill uses `CanTraverse` to return the complete traversal-aware connected component.
 
 ## Explicitly outside the package
 

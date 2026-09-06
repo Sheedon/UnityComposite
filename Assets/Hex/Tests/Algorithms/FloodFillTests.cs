@@ -20,10 +20,14 @@ namespace Sheedon.Hex.Tests.Algorithms
                 new HexCoord(5, 0),
                 new HexCoord(6, 0)
             }));
+            var rule = new AlgorithmTestTraversalRule();
 
-            var connected = FloodFill.FindConnected(graph, new AlgorithmTestTraversalRule(), HexCoord.Zero);
+            var connected = FloodFill.FindConnected(graph, rule, HexCoord.Zero);
 
             Assert.That(connected, Is.EquivalentTo(new[] { HexCoord.Zero, new HexCoord(1, 0) }));
+            Assert.That(rule.CanTraverseCallCount, Is.GreaterThan(0));
+            Assert.That(rule.GetCostCallCount, Is.Zero);
+            Assert.That(rule.TryGetCostCallCount, Is.Zero);
         }
 
         /**

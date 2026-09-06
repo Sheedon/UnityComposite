@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+- Added `IHexTraversalRule.TryGetCost` as the combined passability-and-Cost query.
+- Updated Dijkstra, A*, and CostRange to use `TryGetCost` without separate `CanTraverse` and `GetCost` calls.
+- Kept BFS and FloodFill on `CanTraverse` because they do not consume Cost.
+
 ## [0.3.0] - 2026-08-15
 
 - Added `IHexGraph`, `IHexTraversalRule`, and the live `RegionHexGraph` adapter.
